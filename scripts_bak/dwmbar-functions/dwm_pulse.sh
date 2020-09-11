@@ -1,16 +1,17 @@
 #!/bin/sh
 
-# A dwm_bar function to show the master volume of ALSA
+# A dwm_bar function to show the master volume of PulseAudio
 # Joe Standring <git@joestandring.com>
 # GNU GPLv3
 
-# Dependencies: alsa-utils
+# Dependencies: pamixer
 
-dwm_alsa () {
-    VOL=$(amixer get Master | tail -n1 | sed -r "s/.*\[(.*)%\].*/\1/")
+dwm_pulse () {
+    VOL=$(pamixer --get-volume-human | tr -d '%')
+    
     printf "%s" "$SEP1"
     if [ "$IDENTIFIER" = "unicode" ]; then
-        if [ "$VOL" -eq 0 ]; then
+        if [ "$VOL" = "muted" ] || [ "$VOL" -eq 0 ]; then
             printf "🔇"
         elif [ "$VOL" -gt 0 ] && [ "$VOL" -le 33 ]; then
             printf "🔈 %s%%" "$VOL"
@@ -20,7 +21,7 @@ dwm_alsa () {
             printf "🔊 %s%%" "$VOL"
         fi
     else
-        if [ "$VOL" -eq 0 ]; then
+        if [ "$VOL" = "muted" ] || [ "$VOL" -eq 0 ]; then
             printf "MUTE"
         elif [ "$VOL" -gt 0 ] && [ "$VOL" -le 33 ]; then
             printf "VOL %s%%" "$VOL"
@@ -33,3 +34,4 @@ dwm_alsa () {
     printf "%s\n" "$SEP2"
 }
 
+dwm_pulse

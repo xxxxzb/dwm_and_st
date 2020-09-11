@@ -1,5 +1,4 @@
 #!/bin/bash
 
-sleep 3
-#fcitx &
-#electron-ssr &
+sleep 10
+/bin/bash ~/scripts/kb-off.sh

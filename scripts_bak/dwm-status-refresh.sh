@@ -93,13 +93,45 @@ get_battery_charging_status() {
 
 	if $(acpi -b | grep --quiet Discharging)
 	then
-		echo "🔋";
+		echo "";
 	else # acpi can give Unknown or Charging if charging, https://unix.stackexchange.com/questions/203741/lenovo-t440s-battery-status-unknown-but-charging
-		echo "🔌";
+		echo "";
 	fi
 }
 
 
+battery_status_real_time() {
+    
+    # get charge of all batteries, combine them
+    total_charge=$(expr $(acpi -b | awk '{print $4}' | grep -Eo "[0-9]+" | paste -sd+ | bc));
+
+    # get amount of batteries in the device
+    battery_number=$(acpi -b | wc -l);
+
+    percent=$(expr $total_charge / $battery_number);
+
+
+	if $(acpi -b | grep --quiet Discharging)
+	then
+
+        if [ "$percent" -le 10 ]; then
+            echo "$percent";
+        elif [ "$percent" -gt 10 ] && [ "$percent" -le 30 ]; then
+            echo "$percent";
+        elif [ "$percent" -gt 30 ] && [ "$percent" -le 60 ]; then
+            echo "$percent";
+        elif [ "$percent" -gt 60 ] && [ "$percent" -le 90 ]; then
+            echo "$percent";
+        elif [ "$percent" -gt 90 ]; then
+            echo "$percent";
+        else
+            echo "ﲍ";
+        fi
+
+	else # acpi can give Unknown or Charging if charging, https://unix.stackexchange.com/questions/203741/lenovo-t440s-battery-status-unknown-but-charging
+		echo "$percent";
+	fi
+}
 
 print_bat(){
 	#hash acpi || return 0
@@ -116,11 +148,11 @@ print_bat(){
 		#echo -e "${charge}"
 	#fi
 	#echo "$(get_battery_charging_status) $(get_battery_combined_percent)%, $(get_time_until_charged )";
-	echo "[ $(get_battery_charging_status) $(get_battery_combined_percent)% $(get_time_until_charged ) ]";
+    echo "$(battery_status_real_time)%";
 }
 
 print_date(){
-	date '+%Y年%m月%d日 %H:%M'
+	date '+%m月%d日 %H:%M'
 }
 
 show_record(){
@@ -143,7 +175,7 @@ export IDENTIFIER="unicode"
 #. "$DIR/dwmbar-functions/dwm_backlight.sh"
 . "$DIR/dwmbar-functions/dwm_alsa.sh"
 #. "$DIR/dwmbar-functions/dwm_pulse.sh"
-. "$DIR/dwmbar-functions/dwm_weather.sh"
+#. "$DIR/dwmbar-functions/dwm_weather.sh"
 #. "$DIR/dwmbar-functions/dwm_vpn.sh"
 #. "$DIR/dwmbar-functions/dwm_network.sh"
 #. "$DIR/dwmbar-functions/dwm_keyboard.sh"
@@ -155,11 +187,9 @@ get_bytes
 # Calculates speeds
 vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
 vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
-
-# xsetroot -name " 💿 $(print_mem)M ⬆️ $vel_trans ⬇️ $vel_recv $(dwm_alsa) $(dwm_weather)  $(print_bat)  $(print_date) "
-# xsetroot -name " 💿 $(print_mem)M $(dwm_alsa)  $(print_bat)  $(print_date) "
-# xsetroot -name " 💿 $(print_mem)M ⬆️ $vel_trans ⬇️ $vel_recv $(dwm_alsa)  $(print_bat)  $(print_date) "
-xsetroot -name " 💿 $(print_mem)M $(dwm_alsa) $(dwm_weather)  $(print_bat)  $(print_date) "
+#
+#xsetroot -name "$(print_mem)M $vel_recv $vel_trans $(dwm_alsa) [$(print_bat)]$(show_record) $(print_date)"
+xsetroot -name "$(print_bat) $vel_recv $(print_mem)M $(dwm_alsa) $(show_record) $(print_date)"
 
 # Update old values to perform new calculations
 old_received_bytes=$received_bytes

@@ -1,8 +1,10 @@
-David's build of dwm
+KiteAB's build of dwm
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.
 
-BTW, my scripts are in [this repo](https://github.com/theniceboy/scripts).
+![](https://raw.githubusercontent.com/KiteAB/.config/master/screenshots/1.png)
+
+BTW, my scripts are in [this repository](https://github.com/KiteAB/scripts).
 
 Requirements
 ------------
@@ -25,7 +27,7 @@ Patches applied
 - [dwm-autostart-20161205-bb3bd6f.diff](https://dwm.suckless.org/patches/autostart/)
 - [dwm-awesomebar-20191003-80e2a76.diff](https://dwm.suckless.org/patches/awesomebar/)
 - [dwm-fullscreen-6.2.diff](https://dwm.suckless.org/patches/fullscreen/)
-- [dwm-hide-and-restore.diff](https://github.com/theniceboy/dwm-hide-and-restore-win.diff) (a custom patch I wrote)
+- [dwm-hide-and-restore.diff](https://github.com/theniceboy/dwm-hide-and-restore-win.diff) (a custom patch by @theniceboy)
 - [dwm-hide_vacant_tags-6.2.diff](https://dwm.suckless.org/patches/hide_vacant_tags/)
 - [dwm-noborder-6.2.diff](https://dwm.suckless.org/patches/noborder/)
 - [dwm-pertag-20170513-ceac8c9.diff](https://dwm.suckless.org/patches/pertag/)
@@ -55,5 +57,3 @@ like this in your .xinitrc:
     	sleep 1
     done &
     exec dwm
-
-
